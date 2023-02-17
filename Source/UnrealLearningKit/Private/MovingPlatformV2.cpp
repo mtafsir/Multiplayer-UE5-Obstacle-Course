@@ -18,6 +18,9 @@ void AMovingPlatformV2::BeginPlay()
 
 	StartLocation = GetActorLocation();
 
+	// This is the normal vector for direction for one unit of movement in the designated velocity path
+	MoveDirectionNormal = PlatformVelocity.GetSafeNormal();
+
 
 
 	
@@ -28,38 +31,51 @@ void AMovingPlatformV2::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	
 
 	// Get current location
 	FVector CurrentLocation = GetActorLocation();
-
-
-	// Check ho far we have moved
-	DistanceFromTheStart = FVector::Dist(StartLocation, CurrentLocation);	
+		
 	
 	if(Direction == AMovingPlatformV2::MovingDirection::Forward)
 	{
-		CurrentLocation += (PlatformVelocity * DeltaTime);
+		CurrentLocation = CurrentLocation + (PlatformVelocity * DeltaTime);
+		FVector test = (PlatformVelocity * DeltaTime);
 	}
 	else
 	{
 		CurrentLocation -= (PlatformVelocity * DeltaTime);
 	}
 
+
+
 	// Set the location
 	SetActorLocation(CurrentLocation);
 
+	// Check how far we have moved
+	DistanceFromTheStartCurrent = FVector::Dist(StartLocation, CurrentLocation);
+
 	// Sets direction based on distance from the start
 	//FVector::Dist(PlatformVelocity,FVector(0)) -> This will return the distance the platform will move
-	if( DistanceFromTheStart >= (FVector::Dist(PlatformVelocity,FVector(0)) * 10) )
+	if( DistanceFromTheStartCurrent >= Distance)
 	{	
+		CurrentLocation = StartLocation + MoveDirectionNormal * DistanceFromTheStartCurrent;
+		SetActorLocation(CurrentLocation);
+
 		Direction = AMovingPlatformV2::MovingDirection::Backwards;
+		
+		// A flag that a positive distance in comparison to the previous run should not appear again without the direction being changed
+		PositiveCheck = 1;
 	}
-	else if (DistanceFromTheStart <= (FVector::Dist(PlatformVelocity, FVector(0)) + 10) )
+	else if (DistanceFromTheStartCurrent >= 0 && (0 < DistanceFromTheStartCurrent - DistancePrevious) && PositiveCheck == 1)
 	{	
+		SetActorLocation(StartLocation);
+
 		Direction = AMovingPlatformV2::MovingDirection::Forward;
+		PositiveCheck = 0;
 	}
 
-
+	DistancePrevious = DistanceFromTheStartCurrent;
 
 
 }
