@@ -29,12 +29,20 @@ public:
 	FVector PlatformVelocity = FVector(100, 0, 0);
 
 	UPROPERTY(VisibleAnywhere, Category = "Moving Platform")
-	double DistanceFromTheStart = 0;
+	double DistanceFromTheStartCurrent = 0;
+
+	UPROPERTY(EditAnywhere, Category = "Moving Platform")
+	double Distance = 10;
 
 // For standard variables
 public:
 	FVector StartLocation;
+	FVector MoveDirectionNormal;
 	MovingDirection Direction = Forward;
+
+	int PositiveCheck = 0;
+	double DistancePrevious = 0;
+
 
 public:	
 	// Called every frame
