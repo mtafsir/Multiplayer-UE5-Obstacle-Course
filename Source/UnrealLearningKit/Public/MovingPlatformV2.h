@@ -14,25 +14,28 @@ class UNREALLEARNINGKIT_API AMovingPlatformV2 : public AActor
 private:
 	enum MovingDirection {Forward, Backwards};
 
-public:	
-	// Sets default values for this actor's properties
-	AMovingPlatformV2();
+	UPROPERTY(EditAnywhere, Category = "Moving Platform")
+		FVector PlatformVelocity = FVector(100, 0, 0);
+
+	UPROPERTY(VisibleAnywhere, Category = "Moving Platform")
+		double DistanceFromTheStartCurrent = 0;
+
+	UPROPERTY(EditAnywhere, Category = "Moving Platform")
+		double Distance = 10;
+
+//Class definition
+private:
+	void MovePlatform(float DeltaTime);
+	void RotatePlatform(float DeltaTime);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-/// For UPROPERTY parameters 
+
 public:
-
-	UPROPERTY(EditAnywhere, Category = "Moving Platform")
-	FVector PlatformVelocity = FVector(100, 0, 0);
-
-	UPROPERTY(VisibleAnywhere, Category = "Moving Platform")
-	double DistanceFromTheStartCurrent = 0;
-
-	UPROPERTY(EditAnywhere, Category = "Moving Platform")
-	double Distance = 10;
+	// Sets default values for this actor's properties
+	AMovingPlatformV2();
 
 // For standard variables
 public:
